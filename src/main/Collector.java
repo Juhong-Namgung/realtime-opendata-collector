@@ -42,7 +42,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
+/*
+ * 
+ * 
+ */
 public class Collector {
 
 	static Logger logger = Logger.getLogger(Collector.class);
@@ -88,7 +91,7 @@ public class Collector {
 		}
 		logger.addAppender(appender);
 
-		// Data Collect TimeInterval (수집 주기)
+		// Data Collect TimeInterval (�닔吏� 二쇨린)
 		Long timeintveral = Long.parseLong(userinput.getTimeInterval());
 
 		while (true) {
@@ -120,7 +123,7 @@ public class Collector {
 			logger.fatal("File cannot make");
 			return;
 		}
-		// Filename(파일 이름 형식): filename-yyyy-MM-dd_HH_mm_ss.format
+		// Filename(�뙆�씪 �씠由� �삎�떇): filename-yyyy-MM-dd_HH_mm_ss.format
 		SimpleDateFormat fileTime = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
 		String request_file_date = fileTime.format(new Date(time));
 		filename = separator + userinput.getFilename() + "-" + request_file_date;
