@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,6 +43,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
+
 /*
  * 
  * 
@@ -82,6 +85,7 @@ public class Collector {
 		Map<String, Object> input = getMapFromJsonObject(inputjson);
 		is_data_kr = setUserinput(input);
 
+		// Log file
 		logfilename = "log_" + userinput.getFilename() + ".log";
 
 		try {
@@ -91,7 +95,7 @@ public class Collector {
 		}
 		logger.addAppender(appender);
 
-		// Data Collect TimeInterval (�닔吏� 二쇨린)
+		// Data Collect TimeInterval
 		Long timeintveral = Long.parseLong(userinput.getTimeInterval());
 
 		while (true) {
@@ -104,10 +108,8 @@ public class Collector {
 	public static void collect() throws IOException {
 
 		String dir, filename;
-
-		url = URLBuilder(userinput);
-
-		String data = readDataFromUrl(url, userinput);
+		
+		url = URLBuilder(userinput);		
 
 		dir = userinput.getDirectory();
 		long time = System.currentTimeMillis();
@@ -123,18 +125,43 @@ public class Collector {
 			logger.fatal("File cannot make");
 			return;
 		}
-		// Filename(�뙆�씪 �씠由� �삎�떇): filename-yyyy-MM-dd_HH_mm_ss.format
+		// Filename Format: filename-yyyy-MM-dd_HH_mm_ss.format
 		SimpleDateFormat fileTime = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
 		String request_file_date = fileTime.format(new Date(time));
 		filename = separator + userinput.getFilename() + "-" + request_file_date;
-
-		if (userinput.getFormat().equals("xml")) {
-			WriteFileXml(data, f.toString(), filename);
-
-		} else if (userinput.getFormat().equals("txt")) {
-			WriteFileText(data, f.toString(), filename);
+		
+		if(userinput.getService().equals(null)) {
+			logger.fatal("File or API Must be setting!!");			
+		}
+		if (userinput.getService().equals("file")) {
+			FileDownloader down = new FileDownloader();
+			down.fileUrlDownload(userinput.getURL(), userinput.getDirectory() + folder_name, filename + "." + userinput.getOutputFormat());
 		} else {
-			WriteFileJson(data, f.toString(), filename);
+			String data = readDataFromUrl(url, userinput);
+			// Data Format Check
+			if (userinput.getFormat().equals("xml")) {
+				WriteFileXml(data, f.toString(), filename);
+
+			} else if (userinput.getFormat().equals("txt")) {
+				WriteFileText(data, f.toString(), filename);
+			} else {
+				if(userinput.getOutputFormat().equals("csv")) {
+					JsonFlattener parser = new JsonFlattener();
+					CSVWriter writer = new CSVWriter();
+
+					List<Map<String, String>> flatJson = null;
+					try {
+						flatJson = parser.parseJson(data);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					writer.writeAsCSV(flatJson, f.toString() + filename + ".csv");
+					
+				} else {
+				WriteFileJson(data, f.toString(), filename); 
+				}
+			}
 		}
 	}
 
@@ -155,7 +182,10 @@ public class Collector {
 
 		for (String key : inputjson.keySet()) {
 			Object value = inputjson.get(key);
-			if (key.equals("URL")) {
+			if (key.equals("service")) {
+				userinput.setService(value);
+			}
+			else if (key.equals("URL")) {
 				userinput.setURL(value);
 			} else if (key.equals("serviceKey")) {
 				is_data_kr = userinput.setServiceKey(value);
@@ -171,6 +201,8 @@ public class Collector {
 				userinput.setFormat(value);
 			} else if (key.equals("urlHeader")) {
 				userinput.seturlHeader(value);
+			} else if (key.equals("outputformat")) {
+				userinput.setOutputFormat(value);
 			} else {
 				logger.error("Json file has invalid value");
 			}

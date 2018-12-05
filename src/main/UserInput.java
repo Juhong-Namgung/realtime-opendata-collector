@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class UserInput {
 	
+	private String service=null;
 	private String URL;
 	private String serviceKey=null;
 	private Map<String, Object> serviceKeyMap;
@@ -19,13 +20,16 @@ public class UserInput {
 	private String directory;
 	private String filename;
 	private String format = "xml";
+	private String output_format;
 		
+	
 	public String getURL() { return URL;}
 	public String getServiceKey() { return serviceKey; }
 	public String getTimeInterval() { return timeInterval;}
 	public String getDirectory() { return directory;}
 	public String getFilename() { return filename;}
 	public String getFormat() { return format;}
+	public String getOutputFormat() { return output_format; }
 	
 	public Map<String, String> getParameter() {
 		if(parameter==null) return null;
@@ -59,6 +63,7 @@ public class UserInput {
 	public void setDirectory(Object dir) { this.directory = (String) dir; }
 	public void setFilename(Object file) { this.filename = (String) file; }
 	public void setFormat(Object format) { this.format = (String) format; }
+	public void setOutputFormat(Object output) { this.output_format = (String) output; }
 	
 	@SuppressWarnings("unchecked")
 	public boolean setServiceKey(Object serviceKey) {
@@ -76,5 +81,11 @@ public class UserInput {
 	
 	@SuppressWarnings("unchecked")
 	public void seturlHeader(Object urlHeader) { this.urlHeader = (Map<String, Object>) urlHeader; }
+	public String getService() {
+		return service;
+	}
+	public void setService(Object service) {
+		this.service = (String) service;
+	}
 	
 }
