@@ -1,9 +1,11 @@
-﻿# Real-time Open Data Collector
+﻿
+# Real-time Open Data Collector
 
 실시간 공공 데이터 자동 수집 시스템
 Real-time Open Data Collection System
 
 (paper) [An Automatic Collection System for Open Data in Public Sector](https://github.com/Juhong-Namgung/realtime-opendata-collector/blob/master/paper/%5Bpaper%5DAn%20Automatic%20Collection%20System%20for%20Open%20Data%20in%20Public%20Sector.pdf)
+
 (presentation) [An Automatic Collection System for Open Data in Public Sector](https://github.com/Juhong-Namgung/realtime-opendata-collector/blob/master/paper/%5Bpresentation%5DAn%20Automatic%20Collection%20System%20for%20Open%20Data%20in%20the%20Public%20Sector-Oral.pdf)
 
 --- 
@@ -47,3 +49,14 @@ Real-time Open Data Collection System
 #### 타입 변환 지원
 1) XML to CSV
 2) JSON to CSV
+
+--- 
+## 사용법
+
+
+``` bash 
+$ git clone https://github.com/Juhong-Namgung/realtime-opendata-collector.git
+$ cd realtime-opendata-collector/
+$ java -cp "./libs/*:./exec/data-collector.jar" main.Collector {input_json_file_path}
+'''
+
