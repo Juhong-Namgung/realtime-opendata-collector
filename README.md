@@ -54,9 +54,11 @@ Real-time Open Data Collection System
 ## 사용법
 
 
-``` bash 
+```bash 
 $ git clone https://github.com/Juhong-Namgung/realtime-opendata-collector.git
+
 $ cd realtime-opendata-collector/
+
 $ java -cp "./libs/*:./exec/data-collector.jar" main.Collector {input_json_file_path}
 '''
 
